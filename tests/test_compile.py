@@ -1,0 +1,24 @@
+from pathlib import Path
+
+from ais_scenario_toolkit.compiler import compile_scenario, load_scenario
+from ais_scenario_toolkit.io import write_timeline_csv, write_timeline_jsonl
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_synthetic_scenario_compile(tmp_path):
+    scenario = load_scenario(ROOT / "scenarios" / "crossing_starboard_danger.json")
+    records = compile_scenario(scenario)
+
+    assert len(records) == (scenario.duration_sec + 1) * 2
+    assert records[0].role == "own"
+    target_records = [record for record in records if record.role == "target"]
+    assert any(record.computed_level == "danger" for record in target_records)
+
+    jsonl = tmp_path / "timeline.jsonl"
+    csv = tmp_path / "timeline.csv"
+    write_timeline_jsonl(records, jsonl)
+    write_timeline_csv(records, csv)
+    assert jsonl.exists()
+    assert csv.exists()

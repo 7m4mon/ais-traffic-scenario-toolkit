@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.2",
+  "name": "crossing_starboard_danger",
+  "description": "Target crosses ahead from starboard side with danger CPA/TCPA.",
+  "origin": { "lat": -37.8840, "lon": 144.9500 },
+  "duration_sec": 600,
+  "time_step_sec": 1,
+  "own_ship": {
+    "mmsi": 999510000,
+    "name": "OWN SHIP",
+    "initial": { "x_nm": 0.0, "y_nm": 0.0, "heading_deg": 0.0, "speed_kn": 9.0 },
+    "events": []
+  },
+  "targets": [
+    {
+      "mmsi": 999510101,
+      "name": "CROSS STBD",
+      "message_type": 18,
+      "ship_type": 60,
+      "expected_level": "danger",
+      "initial": { "x_nm": 0.7, "y_nm": 0.525, "heading_deg": 270.0, "speed_kn": 12.0 },
+      "events": []
+    }
+  ]
+}

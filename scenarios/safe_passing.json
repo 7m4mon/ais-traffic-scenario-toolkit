@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.2",
+  "name": "safe_passing",
+  "description": "Target passes well clear.",
+  "origin": { "lat": -37.8840, "lon": 144.9500 },
+  "duration_sec": 600,
+  "time_step_sec": 1,
+  "own_ship": {
+    "mmsi": 999510000,
+    "name": "OWN SHIP",
+    "initial": { "x_nm": 0.0, "y_nm": 0.0, "heading_deg": 0.0, "speed_kn": 8.0 },
+    "events": []
+  },
+  "targets": [
+    {
+      "mmsi": 999510201,
+      "name": "SAFE PASS",
+      "message_type": 18,
+      "ship_type": 60,
+      "expected_level": "safe",
+      "initial": { "x_nm": 2.0, "y_nm": 2.0, "heading_deg": 180.0, "speed_kn": 8.0 },
+      "events": []
+    }
+  ]
+}

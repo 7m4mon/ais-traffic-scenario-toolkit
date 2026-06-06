@@ -1,0 +1,2 @@
+time_sec,timestamp_utc,role,mmsi,name,x_nm,y_nm,lat,lon,sog_kn,cog_deg,heading_deg,message_type,expected_level,computed_level,cpa_nm,tcpa_sec,source,raw_aivdm,rx_signalpower_db,rx_ppm,rx_timestamp_raw
+0.0,2026-06-01T12:53:33Z,target,999002006,,1.7992659795894783,-8.980000000000103,-38.03366666666667,144.987995,0.1,236.2,236.0,1,,,,,recorded_aivdm,"!AIVDM,1,1,,A,1>pf?UQP01:Gdtsb?:V9>WHd0000,0*17",-3.4104,-0.289352,20260601125333

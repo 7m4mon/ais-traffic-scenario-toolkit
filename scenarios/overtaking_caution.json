@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.2",
+  "name": "overtaking_caution",
+  "description": "Faster own ship overtakes a nearby target.",
+  "origin": { "lat": -37.8840, "lon": 144.9500 },
+  "duration_sec": 600,
+  "time_step_sec": 1,
+  "thresholds": {
+    "caution_cpa_nm": 0.5,
+    "caution_tcpa_sec": 900,
+    "danger_cpa_nm": 0.1,
+    "danger_tcpa_sec": 180
+  },
+  "own_ship": {
+    "mmsi": 999510000,
+    "name": "OWN SHIP",
+    "initial": { "x_nm": 0.0, "y_nm": 0.0, "heading_deg": 0.0, "speed_kn": 12.0 },
+    "events": []
+  },
+  "targets": [
+    {
+      "mmsi": 999510401,
+      "name": "OVERTAKEN",
+      "message_type": 18,
+      "ship_type": 60,
+      "expected_level": "caution",
+      "initial": { "x_nm": 0.2, "y_nm": 0.8, "heading_deg": 0.0, "speed_kn": 8.0 },
+      "events": []
+    }
+  ]
+}
