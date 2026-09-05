@@ -94,8 +94,8 @@ python tools/aivdm_to_bits.py --ignore-checksum '!AIVDM,1,1,,A,1>pf?UQP01:Gdtsb?
 - Follow local law and use shielding, dummy loads, and attenuation for any RF-chain work.
 - Prefer TCP/UDP, serial NMEA input, and simulator WebSocket paths when testing plotters and receivers.
 
-## Tests
+## Article
 
 ```bash
-pytest
+https://nomulabo.com/ais-traffic-scenario-toolkit/
 ```
