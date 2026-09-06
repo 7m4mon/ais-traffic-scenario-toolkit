@@ -4,6 +4,14 @@ Python toolkit for building and replaying AIS encounter scenarios. It compiles s
 
 This project does not transmit RF. If you feed generated AIS frames into external RF lab equipment, keep that work inside a legal closed test setup with suitable attenuation and no over-the-air emission.
 
+## Project Information
+
+- First committed: June 6, 2026
+- Author: 7M4MON
+- License: [MIT License](LICENSE)
+
+You are welcome to use, modify, and redistribute this toolkit under the terms of the MIT License.
+
 ## Install
 
 ```bash
@@ -104,6 +112,12 @@ python tools/ais_scenario_player.py \
 ```
 
 The defaults are 4800 baud for own-ship NMEA and 38400 baud for target AIVDM. The legacy `--baud` option still sets both serial outputs unless the corresponding specific option overrides it.
+
+For the Windows exhibition setup, send own-ship GPS to `COM101` and target AIS to the transmitter on `COM14`:
+
+```powershell
+python .\tools\ais_scenario_player.py --timeline .\timeline\exhibition_gauntlet.jsonl --own-nmea-serial COM101 --own-baud 4800 --target-aivdm-serial COM14 --target-baud 115200 --echo-output
+```
 
 ## AIVDM To Bit String
 
