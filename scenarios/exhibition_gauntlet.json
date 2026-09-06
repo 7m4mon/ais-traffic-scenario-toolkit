@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.2",
+  "name": "exhibition_gauntlet",
+  "description": "Ten-minute plotter exhibition: crossing risk, fast overtaker, head-on approach, virtual isolated danger, AIS-SART, a manoeuvring tug, and a late port-side crossing.",
+  "origin": {
+    "lat": -38.0500,
+    "lon": 144.8500
+  },
+  "duration_sec": 600,
+  "time_step_sec": 1,
+  "thresholds": {
+    "caution_cpa_nm": 0.5,
+    "caution_tcpa_sec": 600,
+    "danger_cpa_nm": 0.2,
+    "danger_tcpa_sec": 300
+  },
+  "own_ship": {
+    "mmsi": 999510000,
+    "name": "DEMO OWN SHIP",
+    "initial": {
+      "x_nm": 0.0,
+      "y_nm": 0.0,
+      "heading_deg": 0.0,
+      "speed_kn": 12.0
+    },
+    "events": [
+      { "time_sec": 240, "speed_kn": 8.0 },
+      { "time_sec": 300, "speed_kn": 12.0 },
+      { "time_sec": 500, "heading_deg": 20.0 }
+    ]
+  },
+  "targets": [
+    {
+      "mmsi": 999510201,
+      "name": "CROSSING EXPRESS",
+      "message_type": 18,
+      "ship_type": 60,
+      "expected_level": "danger",
+      "active_from_sec": 0,
+      "active_until_sec": 230,
+      "initial": {
+        "x_nm": 0.65,
+        "y_nm": 0.55,
+        "heading_deg": 270.0,
+        "speed_kn": 14.0
+      },
+      "events": [
+        { "time_sec": 145, "heading_deg": 225.0 }
+      ]
+    },
+    {
+      "mmsi": 999510202,
+      "name": "DANCING TUG",
+      "message_type": 18,
+      "ship_type": 52,
+      "active_from_sec": 0,
+      "active_until_sec": 600,
+      "initial": {
+        "x_nm": 1.40,
+        "y_nm": -0.20,
+        "heading_deg": 300.0,
+        "speed_kn": 9.0
+      },
+      "events": [
+        { "time_sec": 90, "heading_deg": 230.0 },
+        { "time_sec": 180, "heading_deg": 150.0 },
+        { "time_sec": 270, "heading_deg": 60.0 },
+        { "time_sec": 380, "speed_kn": 3.0 },
+        { "time_sec": 470, "heading_deg": 270.0, "speed_kn": 8.0 }
+      ]
+    },
+    {
+      "mmsi": 999510203,
+      "name": "FAST FERRY",
+      "message_type": 18,
+      "ship_type": 40,
+      "expected_level": "danger",
+      "active_from_sec": 110,
+      "active_until_sec": 380,
+      "initial": {
+        "x_nm": 0.18,
+        "y_nm": -0.05,
+        "heading_deg": 0.0,
+        "speed_kn": 24.0
+      },
+      "events": [
+        { "time_sec": 175, "heading_deg": 25.0 }
+      ]
+    },
+    {
+      "mmsi": 999510204,
+      "name": "HEAD ON TRADER",
+      "message_type": 1,
+      "ship_type": 70,
+      "expected_level": "danger",
+      "active_from_sec": 220,
+      "active_until_sec": 510,
+      "initial": {
+        "x_nm": -0.04,
+        "y_nm": 2.15,
+        "heading_deg": 180.0,
+        "speed_kn": 14.0
+      },
+      "events": [
+        { "time_sec": 175, "heading_deg": 235.0 }
+      ]
+    },
+    {
+      "mmsi": 995039901,
+      "name": "DEMO VIRTUAL WRECK",
+      "message_type": 21,
+      "aton_type": 17,
+      "aton_virtual": true,
+      "active_from_sec": 300,
+      "active_until_sec": 600,
+      "initial": {
+        "x_nm": 0.38,
+        "y_nm": 1.55,
+        "heading_deg": 0.0,
+        "speed_kn": 0.0
+      }
+    },
+    {
+      "mmsi": 970990001,
+      "name": "AIS SART TEST",
+      "message_type": 1,
+      "ship_type": 0,
+      "active_from_sec": 415,
+      "active_until_sec": 600,
+      "initial": {
+        "x_nm": -0.28,
+        "y_nm": 1.42,
+        "heading_deg": 135.0,
+        "speed_kn": 1.5
+      },
+      "events": [
+        { "time_sec": 90, "heading_deg": 105.0, "speed_kn": 2.5 }
+      ]
+    },
+    {
+      "mmsi": 999510207,
+      "name": "LATE PORT CROSSER",
+      "message_type": 18,
+      "ship_type": 80,
+      "expected_level": "danger",
+      "active_from_sec": 390,
+      "active_until_sec": 600,
+      "initial": {
+        "x_nm": -1.00,
+        "y_nm": 1.88,
+        "heading_deg": 90.0,
+        "speed_kn": 18.0
+      },
+      "events": [
+        { "time_sec": 175, "heading_deg": 300.0 }
+      ]
+    }
+  ]
+}

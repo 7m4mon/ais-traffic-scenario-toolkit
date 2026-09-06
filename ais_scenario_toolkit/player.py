@@ -6,6 +6,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 from .ais_encode import (
+    encode_message_21_bits,
     encode_message_24a_bits,
     encode_message_24b_bits,
     encode_position_bits,
@@ -45,16 +46,28 @@ def records_to_output(
         return nmea_messages, bitstrings
     if record.lat is None or record.lon is None or record.mmsi is None:
         return [], []
-    bits = encode_position_bits(
-        record.message_type or 18,
-        mmsi=record.mmsi,
-        lat=record.lat,
-        lon=record.lon,
-        sog_kn=record.sog_kn or 0.0,
-        cog_deg=record.cog_deg or record.heading_deg or 0.0,
-        heading_deg=record.heading_deg,
-        timestamp=timestamp,
-    )
+    if record.message_type == 21:
+        bits = encode_message_21_bits(
+            mmsi=record.mmsi,
+            name=record.name or "",
+            lat=record.lat,
+            lon=record.lon,
+            aid_type=record.aton_type or 0,
+            virtual=record.aton_virtual,
+            off_position=record.aton_off_position,
+            timestamp=timestamp,
+        )
+    else:
+        bits = encode_position_bits(
+            record.message_type or 18,
+            mmsi=record.mmsi,
+            lat=record.lat,
+            lon=record.lon,
+            sog_kn=record.sog_kn or 0.0,
+            cog_deg=record.cog_deg or record.heading_deg or 0.0,
+            heading_deg=record.heading_deg,
+            timestamp=timestamp,
+        )
     nmea_messages.append(payload_bits_to_aivdm(bits))
     bitstrings.append(bits)
     return nmea_messages, bitstrings
@@ -77,6 +90,7 @@ def play_timeline(
     own_nmea_exporters = own_nmea_exporters or []
     aivdm_exporters = aivdm_exporters or []
     bitstring_exporters = bitstring_exporters or []
+    playback_start_timestamp = start_timestamp or datetime.now(timezone.utc)
     grouped: dict[float, list[TimelineRecord]] = defaultdict(list)
     for record in records:
         grouped[float(record.time_sec)].append(record)
@@ -88,7 +102,7 @@ def play_timeline(
                 time.sleep(delay)
         last_time = current_time
         for record in grouped[current_time]:
-            nmea_messages, bitstrings = records_to_output(record, start_timestamp=start_timestamp)
+            nmea_messages, bitstrings = records_to_output(record, start_timestamp=playback_start_timestamp)
             for msg in nmea_messages:
                 if record.role == "own":
                     _send_all(own_nmea_exporters, msg)
@@ -101,7 +115,13 @@ def play_timeline(
                 _send_all(bitstring_exporters, bits)
                 if echo_output and bitstring_exporters:
                     _echo(current_time, record, "BIT", bits)
-            if record.role == "target" and _should_emit_static(current_time, static_interval) and record.mmsi:
+            if (
+                record.role == "target"
+                and record.message_type in (1, 18)
+                and record.mmsi
+                and not str(record.mmsi).startswith(("970", "972", "974"))
+                and _should_emit_static(current_time, static_interval)
+            ):
                 _emit_static(record, aivdm_exporters, nmea_exporters, bitstring_exporters, current_time=current_time, echo_output=echo_output)
 
 

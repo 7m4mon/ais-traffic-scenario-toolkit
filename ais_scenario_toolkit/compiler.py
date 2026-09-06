@@ -43,7 +43,11 @@ def compile_scenario(scenario: Scenario) -> list[TimelineRecord]:
             )
         )
         for target in scenario.targets:
-            target_state = state_at(target, time_sec)
+            if time_sec < target.active_from_sec:
+                continue
+            if target.active_until_sec is not None and time_sec > target.active_until_sec:
+                continue
+            target_state = state_at(target, time_sec - target.active_from_sec)
             lat, lon = local_xy_to_lat_lon(
                 target_state.x_nm,
                 target_state.y_nm,
@@ -81,6 +85,9 @@ def compile_scenario(scenario: Scenario) -> list[TimelineRecord]:
                     tcpa_sec=tcpa_sec,
                     source="synthetic",
                     ship_type=target.ship_type,
+                    aton_type=target.aton_type,
+                    aton_virtual=target.aton_virtual,
+                    aton_off_position=target.aton_off_position,
                 )
             )
     return records

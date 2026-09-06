@@ -1,4 +1,4 @@
-from ais_scenario_toolkit.ais_encode import encode_message_18_bits, payload_bits_to_aivdm
+from ais_scenario_toolkit.ais_encode import encode_message_18_bits, encode_message_21_bits, payload_bits_to_aivdm
 from ais_scenario_toolkit.aivdm_decode import AivdmFragmentAssembler, aivdm_to_payload_bits, decode_position_report
 
 
@@ -34,3 +34,20 @@ def test_encode_decode_message_18_roundtrip():
     assert abs(decoded["lat"] - -37.884) < 1e-5
     assert abs(decoded["lon"] - 144.95) < 1e-5
     assert decoded["sog_kn"] == 12.3
+
+
+def test_encode_message_21_virtual_isolated_danger():
+    bits = encode_message_21_bits(
+        mmsi=995039901,
+        name="DEMO VIRTUAL WRECK",
+        lat=-38.025,
+        lon=144.85,
+        aid_type=17,
+        virtual=True,
+    )
+    assert len(bits) == 272
+    assert int(bits[0:6], 2) == 21
+    assert int(bits[8:38], 2) == 995039901
+    assert int(bits[38:43], 2) == 17
+    assert bits[269] == "1"
+    assert aivdm_to_payload_bits(payload_bits_to_aivdm(bits)) == bits

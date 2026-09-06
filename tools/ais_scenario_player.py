@@ -28,7 +28,9 @@ def main() -> int:
     parser.add_argument("--nmea-udp", help="HOST:PORT mixed own NMEA + target AIVDM UDP output")
     parser.add_argument("--own-nmea-serial", help="Serial port for own RMC/GGA/HDT only")
     parser.add_argument("--target-aivdm-serial", help="Serial port for target AIVDM only")
-    parser.add_argument("--baud", type=int, default=4800)
+    parser.add_argument("--baud", type=int, help="Legacy shared baud rate for both serial outputs")
+    parser.add_argument("--own-baud", type=int, help="Own-ship NMEA serial baud rate (default: 4800)")
+    parser.add_argument("--target-baud", type=int, help="Target AIVDM serial baud rate (default: 38400)")
     parser.add_argument("--bitstring-ws", help="ws:// URL for AIS payload bit strings")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--echo-output", action="store_true", help="Print each message as it is sent during replay")
@@ -36,6 +38,9 @@ def main() -> int:
     parser.add_argument("--replay-mode", choices=["fixed-step", "original-timing"], default="fixed-step")
     parser.add_argument("--static-interval", type=int, default=60)
     args = parser.parse_args()
+
+    own_baud = _resolve_serial_baud(args.own_baud, args.baud, default=4800)
+    target_baud = _resolve_serial_baud(args.target_baud, args.baud, default=38400)
 
     timeline = args.timeline or args.timeline_pos
     if not timeline:
@@ -52,9 +57,9 @@ def main() -> int:
     if args.nmea_udp:
         nmea_exporters.append(UdpExporter(*parse_host_port(args.nmea_udp)))
     if args.own_nmea_serial:
-        own_nmea_exporters.append(SerialExporter(args.own_nmea_serial, args.baud))
+        own_nmea_exporters.append(SerialExporter(args.own_nmea_serial, own_baud))
     if args.target_aivdm_serial:
-        aivdm_exporters.append(SerialExporter(args.target_aivdm_serial, args.baud))
+        aivdm_exporters.append(SerialExporter(args.target_aivdm_serial, target_baud))
     if args.bitstring_ws:
         bitstring_exporters.append(WebSocketTextExporter(args.bitstring_ws))
     if args.dry_run or not (nmea_exporters or own_nmea_exporters or aivdm_exporters or bitstring_exporters):
@@ -77,6 +82,14 @@ def main() -> int:
         for exporter in exporters:
             exporter.close()
     return 0
+
+
+def _resolve_serial_baud(specific: int | None, shared: int | None, *, default: int) -> int:
+    if specific is not None:
+        return specific
+    if shared is not None:
+        return shared
+    return default
 
 
 if __name__ == "__main__":

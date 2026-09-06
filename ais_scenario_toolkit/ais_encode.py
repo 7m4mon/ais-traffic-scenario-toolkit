@@ -129,6 +129,45 @@ def encode_message_18_bits(
     )
 
 
+def encode_message_21_bits(
+    *,
+    mmsi: int,
+    name: str,
+    lat: float,
+    lon: float,
+    aid_type: int = 0,
+    virtual: bool = False,
+    off_position: bool = False,
+    timestamp: datetime | None = None,
+    repeat: int = 0,
+) -> str:
+    """Encode an AIS Aid-to-Navigation report (ITU-R M.1371 message 21)."""
+    return "".join(
+        [
+            uint_bits(21, 6),
+            uint_bits(repeat, 2),
+            uint_bits(mmsi, 30),
+            uint_bits(aid_type, 5),
+            ais_text_bits(name, 20),
+            uint_bits(1, 1),
+            int_bits(lon_to_ais(lon), 28),
+            int_bits(lat_to_ais(lat), 27),
+            uint_bits(0, 9),
+            uint_bits(0, 9),
+            uint_bits(0, 6),
+            uint_bits(0, 6),
+            uint_bits(0, 4),
+            uint_bits(_second(timestamp), 6),
+            uint_bits(int(off_position), 1),
+            uint_bits(0, 8),
+            uint_bits(0, 1),
+            uint_bits(int(virtual), 1),
+            uint_bits(0, 1),
+            uint_bits(0, 1),
+        ]
+    )
+
+
 def encode_message_24a_bits(*, mmsi: int, name: str, repeat: int = 0) -> str:
     return "".join([uint_bits(24, 6), uint_bits(repeat, 2), uint_bits(mmsi, 30), uint_bits(0, 2), ais_text_bits(name, 20)])
 

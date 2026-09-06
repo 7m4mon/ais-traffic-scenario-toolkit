@@ -57,6 +57,11 @@ class Vessel:
     message_type: int = 18
     ship_type: int = 60
     expected_level: str | None = None
+    active_from_sec: float = 0.0
+    active_until_sec: float | None = None
+    aton_type: int = 0
+    aton_virtual: bool = False
+    aton_off_position: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], *, is_own: bool = False) -> "Vessel":
@@ -71,6 +76,11 @@ class Vessel:
             message_type=int(data.get("message_type", 1 if is_own else 18)),
             ship_type=int(data.get("ship_type", 60)),
             expected_level=data.get("expected_level"),
+            active_from_sec=float(data.get("active_from_sec", 0.0)),
+            active_until_sec=_optional_float(data.get("active_until_sec")),
+            aton_type=int(data.get("aton_type", 0)),
+            aton_virtual=bool(data.get("aton_virtual", False)),
+            aton_off_position=bool(data.get("aton_off_position", False)),
         )
 
 
@@ -153,6 +163,9 @@ class TimelineRecord:
     rx_timestamp_raw: str | None = None
     repeat: int | None = None
     ship_type: int | None = None
+    aton_type: int | None = None
+    aton_virtual: bool = False
+    aton_off_position: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         result = self.__dict__.copy()
@@ -193,6 +206,10 @@ CSV_FIELDS = [
     "rx_signalpower_db",
     "rx_ppm",
     "rx_timestamp_raw",
+    "ship_type",
+    "aton_type",
+    "aton_virtual",
+    "aton_off_position",
 ]
 
 

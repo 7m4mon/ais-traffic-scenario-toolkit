@@ -22,3 +22,12 @@ def test_synthetic_scenario_compile(tmp_path):
     write_timeline_csv(records, csv)
     assert jsonl.exists()
     assert csv.exists()
+
+
+def test_target_activation_window():
+    scenario = load_scenario(ROOT / "scenarios" / "exhibition_gauntlet.json")
+    records = compile_scenario(scenario)
+    sart_times = [record.time_sec for record in records if record.mmsi == 970990001]
+    assert sart_times[0] == 415.0
+    assert sart_times[-1] == 600.0
+    assert len(sart_times) == 186
