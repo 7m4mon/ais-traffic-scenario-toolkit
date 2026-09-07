@@ -47,6 +47,8 @@ python tools/ais_scenario_compile.py \
   --csv timeline/exhibition_gauntlet.csv
 ```
 
+The toolkit also includes a scenario inspired by the famous Battle of Tsushima, featuring the Japanese fleet's "Togo Turn." See [the scenario documentation](docs/tsushima_togo_turn.md) for details.
+
 ## Import AIS-Catcher Logs
 
 ```bash
@@ -138,7 +140,8 @@ python tools/aivdm_to_bits.py --ignore-checksum '!AIVDM,1,1,,A,1>pf?UQP01:Gdtsb?
 https://nomulabo.com/ais-traffic-scenario-toolkit/
 ```
 
-<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/2e1525ee-128d-4bf5-b736-c22c53c27d4f" />  
-<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/afe11d3f-f91d-4d8d-903d-9b4538de8be4" />  
-<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/0ed44d61-2605-43f9-b69f-e10197b1f2f0" />  
-<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/8d30fb26-ae89-49a5-aa2b-496de63906e1" />  
+<img width="867" height="714" alt="crossing" src="https://github.com/user-attachments/assets/0ed44d61-2605-43f9-b69f-e10197b1f2f0" />  
+<img width="867" height="714" alt="head_on" src="https://github.com/user-attachments/assets/afe11d3f-f91d-4d8d-903d-9b4538de8be4" />  
+<img width="867" height="714" alt="overtaking" src="https://github.com/user-attachments/assets/2e1525ee-128d-4bf5-b736-c22c53c27d4f" />  
+<img width="867" height="714" alt="exhibition" src="https://github.com/user-attachments/assets/8d30fb26-ae89-49a5-aa2b-496de63906e1" />  
+<img width="886" height="819" alt="togo_turn" src="https://github.com/user-attachments/assets/35fa6a10-357b-4a46-9d15-2eb5a82a5b25" />  
