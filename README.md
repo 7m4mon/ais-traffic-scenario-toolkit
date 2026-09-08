@@ -49,6 +49,8 @@ python tools/ais_scenario_compile.py \
 
 The toolkit also includes a scenario inspired by the famous Battle of Tsushima, featuring the Japanese fleet's "Togo Turn." See [the scenario documentation](docs/tsushima_togo_turn.md) for details.
 
+Two collision scenarios are also included: USS Fitzgerald / ACX Crystal and HNoMS Helge Ingstad / Sola TS, based on published accident reports. See the [Fitzgerald documentation](docs/fitzgerald_collision.md) and [Helge Ingstad documentation](docs/helge_ingstad_collision.md) for details and replay instructions.
+
 ## Import AIS-Catcher Logs
 
 ```bash

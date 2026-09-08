@@ -1,0 +1,728 @@
+{
+  "schema_version": "observed_tracks/1",
+  "name": "fitzgerald_collision",
+  "description": "JTSB table-based replay; use tools/build_fitzgerald.py, not ais_scenario_compile.py.",
+  "reference_start": "2017-06-17T01:15:12+09:00",
+  "reference_end": "2017-06-17T01:30:34+09:00",
+  "origin": {
+    "lat": 34.52166666666667,
+    "lon": 139.07166666666666
+  },
+  "max_extrapolation_sec": 7,
+  "sources": [
+    {
+      "id": "JTSB",
+      "url": "https://jtsb.mlit.go.jp/ship/rep-acci/2019/MA2019-8-1_2017tk0009.pdf",
+      "use": "Corrected report: tables 1, 2, 4, 5 position data; table 6 events. D/E names cross-identified using NTSB figure 7."
+    },
+    {
+      "id": "NTSB",
+      "url": "https://www.ntsb.gov/investigations/AccidentReports/Reports/MAR2002.pdf",
+      "use": "Figures 7/10 visual cross-check and ship names; NTSB impact time 01:30:32 differs from JTSB 01:30:34. No clock alignment applied."
+    }
+  ],
+  "limitations": [
+    "Position fixes interpolate linearly; SOG and COG interpolate independently and need not equal the derivative of position.",
+    "Fitzgerald ARPA radar reflection positions and commercial ship GPS antenna positions are different reference points; do not force them to coincide.",
+    "Fitzgerald heading is unavailable; COG is used as an explicit display proxy.",
+    "Last seven seconds of Fitzgerald and ACX Crystal are constant COG/SOG extrapolation, not the actual final helm response.",
+    "Maersk Evora appears only when its table starts at 01:25:39, not its actual arrival in the area.",
+    "Synthetic MMSIs and Class B messages are replay transport; these are not original received AIS packets.",
+    "Reported track positions are retained without adjusting them to NTSB reconstructed tracks or to a collision point."
+  ],
+  "annotations": [
+    {
+      "local_time": "01:15:12",
+      "label": "再生開始：位置記録の共通範囲",
+      "source": "model"
+    },
+    {
+      "local_time": "01:22:00",
+      "label": "Fitzgerald：200°への変針指令（航跡はJTSB記録を使用）",
+      "source": "NTSB p.8"
+    },
+    {
+      "local_time": "01:25:39",
+      "label": "Maersk Evora：公開位置データの開始",
+      "source": "JTSB table 5"
+    },
+    {
+      "local_time": "01:27:35",
+      "label": "ACX：信号灯と推定される音",
+      "source": "JTSB table 6"
+    },
+    {
+      "local_time": "01:29:13",
+      "label": "ACX：舵角指示器が右15°を表示",
+      "source": "JTSB table 6"
+    },
+    {
+      "local_time": "01:29:55",
+      "label": "ACX：舵角指示器が右30°を表示",
+      "source": "JTSB table 6"
+    },
+    {
+      "local_time": "01:30:16",
+      "label": "ACX：右舵一杯の指令",
+      "source": "JTSB table 6"
+    },
+    {
+      "local_time": "01:30:27",
+      "label": "両当事船の最終記録点。以後7秒は外挿",
+      "source": "JTSB tables 1/2 + model"
+    },
+    {
+      "local_time": "01:30:32",
+      "label": "NTSBの衝突時刻（JTSBと2秒差）",
+      "source": "NTSB p.10"
+    },
+    {
+      "local_time": "01:30:34",
+      "label": "JTSBの衝撃音時刻・再生終了",
+      "source": "JTSB table 6"
+    }
+  ],
+  "vessels": [
+    {
+      "name": "USS FITZGERALD",
+      "role": "own",
+      "mmsi": 999170601,
+      "message_type": 18,
+      "ship_type": 35,
+      "source_kind": "ARPA",
+      "source_table": 2,
+      "source_printed_pages": [
+        4
+      ],
+      "observations": [
+        {
+          "local_time": "01:15:12",
+          "lat_dms": "034-36-18.5",
+          "lon_dms": "139-05-55.8",
+          "sog_kn": 19.8,
+          "cog_deg": 187.7,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:17:12",
+          "lat_dms": "034-35-39.8",
+          "lon_dms": "139-05-48.6",
+          "sog_kn": 19.4,
+          "cog_deg": 189.0,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:19:12",
+          "lat_dms": "034-35-01.6",
+          "lon_dms": "139-05-41.5",
+          "sog_kn": 19.4,
+          "cog_deg": 189.1,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:19:57",
+          "lat_dms": "034-34-47.0",
+          "lon_dms": "139-05-37.6",
+          "sog_kn": 19.6,
+          "cog_deg": 188.7,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:20:12",
+          "lat_dms": "034-34-42.4",
+          "lon_dms": "139-05-38.3",
+          "sog_kn": 19.6,
+          "cog_deg": 188.7,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:20:57",
+          "lat_dms": "034-34-27.4",
+          "lon_dms": "139-05-34.8",
+          "sog_kn": 19.6,
+          "cog_deg": 188.6,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:21:12",
+          "lat_dms": "034-34-22.3",
+          "lon_dms": "139-05-35.2",
+          "sog_kn": 19.5,
+          "cog_deg": 188.9,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:21:57",
+          "lat_dms": "034-34-08.1",
+          "lon_dms": "139-05-32.0",
+          "sog_kn": 19.4,
+          "cog_deg": 189.3,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:22:12",
+          "lat_dms": "034-34-04.0",
+          "lon_dms": "139-05-29.7",
+          "sog_kn": 19.4,
+          "cog_deg": 189.4,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:22:57",
+          "lat_dms": "034-33-47.7",
+          "lon_dms": "139-05-27.0",
+          "sog_kn": 19.4,
+          "cog_deg": 189.3,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:23:12",
+          "lat_dms": "034-33-44.0",
+          "lon_dms": "139-05-26.9",
+          "sog_kn": 19.4,
+          "cog_deg": 190.0,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:23:57",
+          "lat_dms": "034-33-30.6",
+          "lon_dms": "139-05-23.8",
+          "sog_kn": 19.4,
+          "cog_deg": 192.8,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:24:12",
+          "lat_dms": "034-33-25.5",
+          "lon_dms": "139-05-21.7",
+          "sog_kn": 19.4,
+          "cog_deg": 190.0,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:24:57",
+          "lat_dms": "034-33-12.0",
+          "lon_dms": "139-05-17.5",
+          "sog_kn": 19.2,
+          "cog_deg": 192.8,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:25:12",
+          "lat_dms": "034-33-07.5",
+          "lon_dms": "139-05-14.7",
+          "sog_kn": 19.3,
+          "cog_deg": 193.7,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:25:57",
+          "lat_dms": "034-32-52.8",
+          "lon_dms": "139-05-08.1",
+          "sog_kn": 19.3,
+          "cog_deg": 197.5,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:26:12",
+          "lat_dms": "034-32-48.6",
+          "lon_dms": "139-05-06.6",
+          "sog_kn": 19.4,
+          "cog_deg": 198.5,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:26:57",
+          "lat_dms": "034-32-34.8",
+          "lon_dms": "139-05-01.0",
+          "sog_kn": 19.5,
+          "cog_deg": 199.9,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:27:12",
+          "lat_dms": "034-32-29.9",
+          "lon_dms": "139-04-58.9",
+          "sog_kn": 19.6,
+          "cog_deg": 200.0,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:27:57",
+          "lat_dms": "034-32-16.1",
+          "lon_dms": "139-04-52.8",
+          "sog_kn": 19.8,
+          "cog_deg": 200.2,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:28:12",
+          "lat_dms": "034-32-09.7",
+          "lon_dms": "139-04-50.1",
+          "sog_kn": 19.8,
+          "cog_deg": 200.2,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:28:57",
+          "lat_dms": "034-31-56.7",
+          "lon_dms": "139-04-44.0",
+          "sog_kn": 19.8,
+          "cog_deg": 200.1,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:29:12",
+          "lat_dms": "034-31-52.8",
+          "lon_dms": "139-04-42.4",
+          "sog_kn": 19.8,
+          "cog_deg": 200.0,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:29:57",
+          "lat_dms": "034-31-37.9",
+          "lon_dms": "139-04-36.5",
+          "sog_kn": 19.8,
+          "cog_deg": 200.0,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:30:12",
+          "lat_dms": "034-31-33.2",
+          "lon_dms": "139-04-34.3",
+          "sog_kn": 19.8,
+          "cog_deg": 199.9,
+          "heading_deg": null
+        },
+        {
+          "local_time": "01:30:27",
+          "lat_dms": "034-31-28.8",
+          "lon_dms": "139-04-32.2",
+          "sog_kn": 19.9,
+          "cog_deg": 200.0,
+          "heading_deg": null
+        }
+      ]
+    },
+    {
+      "name": "ACX CRYSTAL",
+      "role": "target",
+      "mmsi": 999170602,
+      "message_type": 18,
+      "ship_type": 70,
+      "source_kind": "AIS",
+      "source_table": 1,
+      "source_printed_pages": [
+        3
+      ],
+      "observations": [
+        {
+          "local_time": "01:15:01",
+          "lat_dms": "034-30-01.1",
+          "lon_dms": "138-58-53.7",
+          "sog_kn": 18.4,
+          "cog_deg": 87.6,
+          "heading_deg": 85.0
+        },
+        {
+          "local_time": "01:16:07",
+          "lat_dms": "034-30-02.3",
+          "lon_dms": "138-59-18.1",
+          "sog_kn": 18.4,
+          "cog_deg": 86.9,
+          "heading_deg": 85.0
+        },
+        {
+          "local_time": "01:17:07",
+          "lat_dms": "034-30-03.2",
+          "lon_dms": "138-59-40.3",
+          "sog_kn": 18.2,
+          "cog_deg": 86.1,
+          "heading_deg": 81.0
+        },
+        {
+          "local_time": "01:18:01",
+          "lat_dms": "034-30-05.5",
+          "lon_dms": "138-59-59.8",
+          "sog_kn": 18.0,
+          "cog_deg": 79.4,
+          "heading_deg": 73.0
+        },
+        {
+          "local_time": "01:19:01",
+          "lat_dms": "034-30-10.8",
+          "lon_dms": "139-00-20.6",
+          "sog_kn": 17.9,
+          "cog_deg": 70.5,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:20:02",
+          "lat_dms": "034-30-17.0",
+          "lon_dms": "139-00-41.2",
+          "sog_kn": 18.2,
+          "cog_deg": 70.5,
+          "heading_deg": 70.0
+        },
+        {
+          "local_time": "01:21:02",
+          "lat_dms": "034-30-22.9",
+          "lon_dms": "139-01-02.1",
+          "sog_kn": 18.3,
+          "cog_deg": 70.6,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:21:50",
+          "lat_dms": "034-30-27.9",
+          "lon_dms": "139-01-18.9",
+          "sog_kn": 18.4,
+          "cog_deg": 70.1,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:22:25",
+          "lat_dms": "034-30-31.7",
+          "lon_dms": "139-01-31.4",
+          "sog_kn": 18.4,
+          "cog_deg": 69.9,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:23:02",
+          "lat_dms": "034-30-35.3",
+          "lon_dms": "139-01-44.0",
+          "sog_kn": 18.4,
+          "cog_deg": 70.8,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:24:01",
+          "lat_dms": "034-30-41.2",
+          "lon_dms": "139-02-04.8",
+          "sog_kn": 18.4,
+          "cog_deg": 71.0,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:24:55",
+          "lat_dms": "034-30-47.0",
+          "lon_dms": "139-02-24.0",
+          "sog_kn": 18.5,
+          "cog_deg": 69.4,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:25:08",
+          "lat_dms": "034-30-48.3",
+          "lon_dms": "139-02-28.2",
+          "sog_kn": 18.5,
+          "cog_deg": 69.6,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:26:01",
+          "lat_dms": "034-30-53.9",
+          "lon_dms": "139-02-46.8",
+          "sog_kn": 18.5,
+          "cog_deg": 70.6,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:26:55",
+          "lat_dms": "034-30-59.4",
+          "lon_dms": "139-03-06.1",
+          "sog_kn": 18.5,
+          "cog_deg": 71.0,
+          "heading_deg": 69.0
+        },
+        {
+          "local_time": "01:27:20",
+          "lat_dms": "034-31-01.8",
+          "lon_dms": "139-03-14.6",
+          "sog_kn": 18.5,
+          "cog_deg": 70.7,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:27:55",
+          "lat_dms": "034-31-05.7",
+          "lon_dms": "139-03-27.1",
+          "sog_kn": 18.5,
+          "cog_deg": 69.5,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:28:20",
+          "lat_dms": "034-31-08.2",
+          "lon_dms": "139-03-35.5",
+          "sog_kn": 18.4,
+          "cog_deg": 69.8,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:28:43",
+          "lat_dms": "034-31-10.6",
+          "lon_dms": "139-03-43.5",
+          "sog_kn": 18.5,
+          "cog_deg": 69.9,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:29:20",
+          "lat_dms": "034-31-14.5",
+          "lon_dms": "139-03-56.5",
+          "sog_kn": 18.4,
+          "cog_deg": 70.0,
+          "heading_deg": 68.0
+        },
+        {
+          "local_time": "01:29:31",
+          "lat_dms": "034-31-15.8",
+          "lon_dms": "139-04-00.3",
+          "sog_kn": 18.5,
+          "cog_deg": 68.9,
+          "heading_deg": 70.0
+        },
+        {
+          "local_time": "01:29:55",
+          "lat_dms": "034-31-18.5",
+          "lon_dms": "139-04-09.1",
+          "sog_kn": 18.5,
+          "cog_deg": 71.2,
+          "heading_deg": 82.0
+        },
+        {
+          "local_time": "01:30:27",
+          "lat_dms": "034-31-19.8",
+          "lon_dms": "139-04-20.1",
+          "sog_kn": 17.3,
+          "cog_deg": 88.2,
+          "heading_deg": 112.0
+        }
+      ]
+    },
+    {
+      "name": "WAN HAI 266",
+      "role": "target",
+      "mmsi": 999170603,
+      "message_type": 18,
+      "ship_type": 70,
+      "source_kind": "AIS",
+      "source_table": 4,
+      "source_printed_pages": [
+        6,
+        7
+      ],
+      "observations": [
+        {
+          "local_time": "01:14:23",
+          "lat_dms": "034-31-51.5",
+          "lon_dms": "138-58-41.1",
+          "sog_kn": 16.4,
+          "cog_deg": 92.0,
+          "heading_deg": 92.0
+        },
+        {
+          "local_time": "01:15:23",
+          "lat_dms": "034-31-50.9",
+          "lon_dms": "138-59-00.7",
+          "sog_kn": 16.4,
+          "cog_deg": 92.0,
+          "heading_deg": 92.0
+        },
+        {
+          "local_time": "01:16:23",
+          "lat_dms": "034-31-50.3",
+          "lon_dms": "138-59-20.7",
+          "sog_kn": 16.5,
+          "cog_deg": 91.0,
+          "heading_deg": 92.0
+        },
+        {
+          "local_time": "01:17:23",
+          "lat_dms": "034-31-49.6",
+          "lon_dms": "138-59-41.3",
+          "sog_kn": 16.5,
+          "cog_deg": 92.0,
+          "heading_deg": 92.0
+        },
+        {
+          "local_time": "01:18:29",
+          "lat_dms": "034-31-49.0",
+          "lon_dms": "139-00-02.9",
+          "sog_kn": 16.4,
+          "cog_deg": 92.0,
+          "heading_deg": 91.0
+        },
+        {
+          "local_time": "01:19:29",
+          "lat_dms": "034-31-48.9",
+          "lon_dms": "139-00-22.4",
+          "sog_kn": 16.3,
+          "cog_deg": 88.0,
+          "heading_deg": 87.0
+        },
+        {
+          "local_time": "01:20:29",
+          "lat_dms": "034-31-50.1",
+          "lon_dms": "139-00-42.4",
+          "sog_kn": 16.2,
+          "cog_deg": 84.0,
+          "heading_deg": 82.0
+        },
+        {
+          "local_time": "01:21:17",
+          "lat_dms": "034-31-51.8",
+          "lon_dms": "139-00-57.7",
+          "sog_kn": 16.2,
+          "cog_deg": 81.0,
+          "heading_deg": 81.0
+        },
+        {
+          "local_time": "01:22:22",
+          "lat_dms": "034-31-55.1",
+          "lon_dms": "139-01-19.3",
+          "sog_kn": 16.3,
+          "cog_deg": 77.0,
+          "heading_deg": 77.0
+        },
+        {
+          "local_time": "01:23:34",
+          "lat_dms": "034-31-59.8",
+          "lon_dms": "139-01-42.1",
+          "sog_kn": 16.3,
+          "cog_deg": 75.0,
+          "heading_deg": 76.0
+        },
+        {
+          "local_time": "01:24:47",
+          "lat_dms": "034-32-05.2",
+          "lon_dms": "139-02-05.3",
+          "sog_kn": 16.4,
+          "cog_deg": 74.0,
+          "heading_deg": 75.0
+        },
+        {
+          "local_time": "01:25:47",
+          "lat_dms": "034-32-09.7",
+          "lon_dms": "139-02-24.7",
+          "sog_kn": 16.5,
+          "cog_deg": 74.0,
+          "heading_deg": 75.0
+        },
+        {
+          "local_time": "01:26:46",
+          "lat_dms": "034-32-14.0",
+          "lon_dms": "139-02-43.7",
+          "sog_kn": 16.5,
+          "cog_deg": 74.0,
+          "heading_deg": 75.0
+        },
+        {
+          "local_time": "01:28:17",
+          "lat_dms": "034-32-20.6",
+          "lon_dms": "139-03-13.0",
+          "sog_kn": 16.5,
+          "cog_deg": 74.0,
+          "heading_deg": 75.0
+        },
+        {
+          "local_time": "01:29:10",
+          "lat_dms": "034-32-24.5",
+          "lon_dms": "139-03-30.5",
+          "sog_kn": 16.6,
+          "cog_deg": 75.0,
+          "heading_deg": 75.0
+        },
+        {
+          "local_time": "01:29:40",
+          "lat_dms": "034-32-26.8",
+          "lon_dms": "139-03-40.5",
+          "sog_kn": 16.6,
+          "cog_deg": 74.0,
+          "heading_deg": 75.0
+        },
+        {
+          "local_time": "01:30:40",
+          "lat_dms": "034-32-31.3",
+          "lon_dms": "139-03-59.2",
+          "sog_kn": 16.6,
+          "cog_deg": 73.0,
+          "heading_deg": 75.0
+        }
+      ]
+    },
+    {
+      "name": "MAERSK EVORA",
+      "role": "target",
+      "mmsi": 999170604,
+      "message_type": 18,
+      "ship_type": 70,
+      "source_kind": "AIS",
+      "source_table": 5,
+      "source_printed_pages": [
+        7
+      ],
+      "observations": [
+        {
+          "local_time": "01:25:39",
+          "lat_dms": "034-27-15.6",
+          "lon_dms": "139-01-01.9",
+          "sog_kn": 19.7,
+          "cog_deg": 58.7,
+          "heading_deg": 60.0
+        },
+        {
+          "local_time": "01:26:39",
+          "lat_dms": "034-27-25.6",
+          "lon_dms": "139-01-22.3",
+          "sog_kn": 19.6,
+          "cog_deg": 59.0,
+          "heading_deg": 60.0
+        },
+        {
+          "local_time": "01:27:39",
+          "lat_dms": "034-27-35.7",
+          "lon_dms": "139-01-42.8",
+          "sog_kn": 19.5,
+          "cog_deg": 58.8,
+          "heading_deg": 59.0
+        },
+        {
+          "local_time": "01:28:39",
+          "lat_dms": "034-27-45.9",
+          "lon_dms": "139-02-02.9",
+          "sog_kn": 19.5,
+          "cog_deg": 58.5,
+          "heading_deg": 59.0
+        },
+        {
+          "local_time": "01:29:39",
+          "lat_dms": "034-27-55.8",
+          "lon_dms": "139-02-22.7",
+          "sog_kn": 19.5,
+          "cog_deg": 58.6,
+          "heading_deg": 59.0
+        },
+        {
+          "local_time": "01:30:15",
+          "lat_dms": "034-28-02.1",
+          "lon_dms": "139-02-35.2",
+          "sog_kn": 19.5,
+          "cog_deg": 58.7,
+          "heading_deg": 59.0
+        },
+        {
+          "local_time": "01:30:39",
+          "lat_dms": "034-28-06.0",
+          "lon_dms": "139-02-42.9",
+          "sog_kn": 19.5,
+          "cog_deg": 58.9,
+          "heading_deg": 60.0
+        }
+      ]
+    }
+  ]
+}

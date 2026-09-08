@@ -1,0 +1,11 @@
+﻿time_sec,local_time,label,source
+0,01:15:12,再生開始：位置記録の共通範囲,model
+408,01:22:00,Fitzgerald：200°への変針指令（航跡はJTSB記録を使用）,NTSB p.8
+627,01:25:39,Maersk Evora：公開位置データの開始,JTSB table 5
+743,01:27:35,ACX：信号灯と推定される音,JTSB table 6
+841,01:29:13,ACX：舵角指示器が右15°を表示,JTSB table 6
+883,01:29:55,ACX：舵角指示器が右30°を表示,JTSB table 6
+904,01:30:16,ACX：右舵一杯の指令,JTSB table 6
+915,01:30:27,両当事船の最終記録点。以後7秒は外挿,JTSB tables 1/2 + model
+920,01:30:32,NTSBの衝突時刻（JTSBと2秒差）,NTSB p.10
+922,01:30:34,JTSBの衝撃音時刻・再生終了,JTSB table 6

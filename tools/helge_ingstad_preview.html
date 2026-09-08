@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Helge Ingstad / Sola TS — 接近再現</title>
+<style>
+body{margin:24px auto;padding:0 18px;max-width:1000px;font:15px system-ui,sans-serif;background:#101923;color:#e2ebf3}h1{font-size:22px}p{color:#b6c8d9;line-height:1.65}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}button,select{font:inherit;background:#233446;color:inherit;border:1px solid #62778b;border-radius:4px;padding:8px}input{flex:1;min-width:150px}canvas{width:100%;height:550px;display:block;margin:16px 0;border:1px solid #526476}#legend{display:flex;gap:18px;flex-wrap:wrap}#time{font-variant-numeric:tabular-nums}#event{min-height:3em}a{color:#7dcaff}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}td,th{padding:8px;text-align:right;border-bottom:1px solid #526476}th:first-child,td:first-child{text-align:left}@media(max-width:500px){canvas{height:420px}body{margin:16px auto}h1{font-size:19px}td,th{padding:6px 3px;font-size:12px}}
+</style>
+<h1>Helge Ingstad / Sola TS — 接近再現</h1>
+<p>2018年11月8日・ノルウェー現地時間（CET）。報告書の針路・速力を基にした運動モデル。実測AIS航跡ではありません。</p>
+<div class="controls"><button id="play">再生</button><label for="speed">速度</label><select id="speed"><option value="1">1倍</option><option value="5" selected>5倍</option><option value="20">20倍</option></select><label for="zoom">表示</label><select id="zoom"><option value="full">全航跡</option><option value="close">接触付近を拡大</option></select><input id="seek" aria-label="再生時刻" type="range" min="0" step="1"><strong id="time"></strong></div>
+<canvas id="chart" aria-label="Helge IngstadとSola TSの接近航跡。寸法比に基づく概略船型と中心点。" role="img"></canvas>
+<div id="legend"><span style="color:#69bbff">● HELGE INGSTAD（自船）</span><span style="color:#ffb75d">● SOLA TS</span></div>
+<p id="event" aria-live="polite"></p><p id="detail"></p>
+<p>接触点の仮定から航跡を逆算しています。船型は概略、航跡の点は船体中心。海岸線のない等縮尺図です。無線の内容は要約字幕で、音声・照明・乗員の視認状況は再現しません。</p>
+<details><summary>報告書の船首間距離との比較</summary><table><thead><tr><th>現地時刻</th><th>報告書 m</th><th>モデル m</th><th>差 m</th></tr></thead><tbody id="checks"></tbody></table><p>図13・15〜18の値と比較。報告書に合わせた位置補正はしていません。船体間の最短距離ではありません。</p></details>
+<p><a href="https://www.aibn.no/Marine/Published-reports/2019-08-eng?attach=1&amp;pid=SHT-Report-ReportFile">AIBN公式報告書 Marine 2019/08</a></p>
+<script>
+const data=__TRACK_DATA__;
+const canvas=document.getElementById('chart'),ctx=canvas.getContext('2d');
+const seek=document.getElementById('seek'),play=document.getElementById('play'),speed=document.getElementById('speed'),zoom=document.getElementById('zoom');
+const colors=['#69bbff','#ffb75d'];
+const base=data.start.split(':').reduce((a,b)=>a*60+Number(b),0);
+const clock=t=>{const s=base+Math.floor(t);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')};
+let current=0,running=false,last=null;seek.max=data.duration;
+data.checks.forEach(c=>{const tr=document.createElement('tr');[c.local_time,c.bow_range_m,c.model_bow_range_m,c.residual_m].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});document.getElementById('checks').append(tr)});
+const all=data.tracks.flatMap(s=>s.points),xs=all.map(p=>p[1]),ys=all.map(p=>p[2]);
+const full=[Math.min(...xs)-.3,Math.max(...xs)+.3,Math.min(...ys)-.3,Math.max(...ys)+.3];
+function draw(){
+ const w=canvas.clientWidth,h=canvas.clientHeight,dpr=window.devicePixelRatio||1;
+ canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+ const bounds=zoom.value==='close'?[-.4,.4,-.4,.4]:full;
+ const k=Math.min((w-85)/(bounds[1]-bounds[0]),(h-70)/(bounds[3]-bounds[2]));
+ const x=v=>w/2+(v-(bounds[0]+bounds[1])/2)*k,y=v=>h/2-(v-(bounds[2]+bounds[3])/2)*k;
+ ctx.font='12px system-ui';ctx.strokeStyle='#304253';ctx.fillStyle='#a2b9cd';ctx.lineWidth=1;
+ const step=zoom.value==='close'?.1:.5;
+ for(let i=Math.ceil(bounds[0]/step)*step;i<=bounds[1]+1e-9;i+=step){ctx.beginPath();ctx.moveTo(x(i),y(bounds[2]));ctx.lineTo(x(i),y(bounds[3]));ctx.stroke();ctx.fillText(i.toFixed(1),x(i)-10,y(bounds[2])+18)}
+ for(let i=Math.ceil(bounds[2]/step)*step;i<=bounds[3]+1e-9;i+=step){ctx.beginPath();ctx.moveTo(x(bounds[0]),y(i));ctx.lineTo(x(bounds[1]),y(i));ctx.stroke();ctx.fillText(i.toFixed(1),x(bounds[0])-30,y(i)+4)}
+ ctx.fillText('東 (NM)',w-66,h-8);ctx.fillText('北 (NM)',8,18);
+ ctx.save();ctx.beginPath();ctx.rect(x(bounds[0]),y(bounds[3]),(bounds[1]-bounds[0])*k,(bounds[3]-bounds[2])*k);ctx.clip();
+ data.tracks.forEach((ship,i)=>{
+  const p=ship.points[Math.floor(current)];
+  ctx.strokeStyle=colors[i];ctx.lineWidth=1.5;ctx.beginPath();
+  ship.points.filter(q=>q[0]<=current).forEach((q,j)=>j?ctx.lineTo(x(q[1]),y(q[2])):ctx.moveTo(x(q[1]),y(q[2])));ctx.stroke();
+  const l=ship.length_m/1852*k,b=ship.beam_m/1852*k;
+  ctx.save();ctx.translate(x(p[1]),y(p[2]));ctx.rotate(p[3]*Math.PI/180);ctx.fillStyle=colors[i];ctx.beginPath();ctx.moveTo(0,-l/2);ctx.lineTo(b/2,-l*.30);ctx.lineTo(b/2,l/2);ctx.lineTo(-b/2,l/2);ctx.lineTo(-b/2,-l*.30);ctx.closePath();ctx.fill();ctx.restore();
+  ctx.fillStyle=colors[i];ctx.beginPath();ctx.arc(x(p[1]),y(p[2]),2.5,0,Math.PI*2);ctx.fill();
+ });ctx.restore();
+ document.getElementById('time').textContent=clock(current)+' CET';seek.value=Math.floor(current);
+ const e=data.events.filter(e=>e.time_sec<=current).at(-1),message=e?e.local_time+' — '+e.label:'';
+ const eventEl=document.getElementById('event');if(eventEl.textContent!==message)eventEl.textContent=message;
+ const a=data.tracks[0].points[Math.floor(current)],b=data.tracks[1].points[Math.floor(current)],range=Math.hypot(a[1]-b[1],a[2]-b[2]);
+ document.getElementById('detail').textContent='モデル船体中心間 '+(range*1852).toFixed(0)+' m / CPA '+b[4].toFixed(2)+' NM / TCPA '+(b[5]/60).toFixed(1)+' 分（等速直線予測）';
+}
+play.onclick=()=>{if(current>=data.duration)current=0;running=!running;play.textContent=running?'一時停止':'再生';last=null;draw()};
+seek.oninput=()=>{current=Number(seek.value);draw()};zoom.onchange=draw;
+function tick(now){if(last!==null&&running){current=Math.min(data.duration,current+(now-last)/1000*Number(speed.value));if(current>=data.duration){running=false;play.textContent='再生'}draw()}last=now;requestAnimationFrame(tick)}
+window.addEventListener('resize',draw);draw();requestAnimationFrame(tick);
+</script></html>

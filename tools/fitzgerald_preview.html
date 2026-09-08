@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fitzgerald / ACX Crystal — 記録航跡</title>
+<style>
+body{margin:24px auto;padding:0 18px;max-width:1050px;font:15px system-ui,sans-serif;background:#101923;color:#e2ebf3}h1{font-size:22px}p{color:#b6c8d9;line-height:1.65}.controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}button,select{font:inherit;background:#233446;color:inherit;border:1px solid #62778b;border-radius:4px;padding:8px}input{flex:1;min-width:140px}canvas{width:100%;height:520px;display:block;margin:16px 0;border:1px solid #526476}#legend{display:flex;gap:18px;flex-wrap:wrap}#time{font-variant-numeric:tabular-nums}#event{min-height:3em}a{color:#7dcaff}@media(max-width:500px){canvas{height:420px}body{margin:16px auto}}
+</style>
+<h1>Fitzgerald / ACX Crystal — 記録航跡</h1>
+<p>2017年6月17日・日本時間。JTSBのAIS／ARPA記録点を補間。海岸線のない等縮尺の局所座標図。</p>
+<div class="controls"><button id="play">再生</button><label for="speed">速度</label><select id="speed"><option value="1">1倍</option><option value="5" selected>5倍</option><option value="20">20倍</option></select><input id="seek" aria-label="再生時刻" type="range" min="0" step="1"><strong id="time"></strong></div>
+<canvas id="chart" aria-label="4隻の航跡。横軸は東、縦軸は北、単位は海里。" role="img"></canvas>
+<div id="legend"></div><p id="event" aria-live="polite"></p><p id="detail"></p>
+<p>位置は船体中心ではありません。衝突時刻に表示点が一致するような修正はしていません。01:30:27以後、当事船2隻は7秒間の外挿です。Fitzgeraldの船首方位は対地針路で代用。Maersk Evoraは公開記録が始まる01:25:39から表示します。</p>
+<p><a href="https://jtsb.mlit.go.jp/ship/rep-acci/2019/MA2019-8-1_2017tk0009.pdf">JTSB訂正版報告書・表1、2、4、5、6</a> · <a href="https://www.ntsb.gov/investigations/AccidentReports/Reports/MAR2002.pdf">NTSB報告書</a></p>
+<script>
+const data=__TRACK_DATA__;
+const canvas=document.getElementById('chart'),ctx=canvas.getContext('2d');
+const seek=document.getElementById('seek'),play=document.getElementById('play'),speed=document.getElementById('speed');
+const colors=['#69bbff','#ffb75d','#7fdfbb','#c8a5ff'];
+const base=data.start.split(':').reduce((a,b)=>a*60+Number(b),0);
+const clock=t=>{const s=base+Math.floor(t);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')};
+const eventSec=e=>e.local_time.split(':').reduce((a,b)=>a*60+Number(b),0)-base;
+let current=0,running=false,last=null;
+seek.max=data.duration;
+data.tracks.forEach((track,i)=>{const el=document.createElement('span');el.style.color=colors[i];el.textContent='▲ '+track.name;document.getElementById('legend').append(el)});
+const all=data.tracks.flatMap(s=>s.points),xs=all.map(p=>p[1]),ys=all.map(p=>p[2]);
+const bounds=[Math.min(...xs)-.45,Math.max(...xs)+.45,Math.min(...ys)-.45,Math.max(...ys)+.45];
+function draw(){
+ const w=canvas.clientWidth,h=canvas.clientHeight,dpr=window.devicePixelRatio||1;
+ canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+ const k=Math.min((w-85)/(bounds[1]-bounds[0]),(h-70)/(bounds[3]-bounds[2]));
+ const x=v=>w/2+(v-(bounds[0]+bounds[1])/2)*k,y=v=>h/2-(v-(bounds[2]+bounds[3])/2)*k;
+ ctx.font='12px system-ui';ctx.strokeStyle='#304253';ctx.fillStyle='#a2b9cd';ctx.lineWidth=1;
+ for(let i=Math.ceil(bounds[0]);i<=Math.floor(bounds[1]);i++){ctx.beginPath();ctx.moveTo(x(i),y(bounds[2]));ctx.lineTo(x(i),y(bounds[3]));ctx.stroke();ctx.fillText(i,x(i)-3,y(bounds[2])+18)}
+ for(let i=Math.ceil(bounds[2]);i<=Math.floor(bounds[3]);i++){ctx.beginPath();ctx.moveTo(x(bounds[0]),y(i));ctx.lineTo(x(bounds[1]),y(i));ctx.stroke();ctx.fillText(i,x(bounds[0])-22,y(i)+4)}
+ ctx.fillText('東 (NM)',w-66,h-8);ctx.fillText('北 (NM)',8,18);
+ const active=[];
+ data.tracks.forEach((ship,i)=>{
+  const p=ship.points.find(p=>p[0]===Math.floor(current));if(!p)return;active.push(p);
+  ctx.strokeStyle=colors[i];ctx.lineWidth=2;ctx.beginPath();
+  ship.points.filter(q=>q[0]<=current).forEach((q,j)=>j?ctx.lineTo(x(q[1]),y(q[2])):ctx.moveTo(x(q[1]),y(q[2])));ctx.stroke();
+  ctx.save();ctx.translate(x(p[1]),y(p[2]));ctx.rotate(p[3]*Math.PI/180);ctx.fillStyle=colors[i];ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(6,7);ctx.lineTo(0,4);ctx.lineTo(-6,7);ctx.closePath();ctx.fill();ctx.restore();
+ });
+ document.getElementById('time').textContent=clock(current)+' JST';seek.value=Math.floor(current);
+ const e=data.events.filter(e=>eventSec(e)<=current).at(-1);
+ const message=e?e.local_time+' — '+e.label:'';
+ const eventEl=document.getElementById('event');if(eventEl.textContent!==message)eventEl.textContent=message;
+ if(active.length>=2){const a=active[0],b=active[1],range=Math.hypot(a[1]-b[1],a[2]-b[2]);document.getElementById('detail').textContent='両当事船の記録基準点間距離 '+range.toFixed(2)+' NM / 計算CPA '+b[4].toFixed(2)+' NM / TCPA '+(b[5]/60).toFixed(1)+' 分（記録COG・SOGによる等速直線予測）'}
+}
+play.onclick=()=>{if(current>=data.duration)current=0;running=!running;play.textContent=running?'一時停止':'再生';last=null;draw()};
+seek.oninput=()=>{current=Number(seek.value);draw()};
+function tick(now){if(last!==null&&running){current=Math.min(data.duration,current+(now-last)/1000*Number(speed.value));if(current>=data.duration){running=false;play.textContent='再生'}draw()}last=now;requestAnimationFrame(tick)}
+window.addEventListener('resize',draw);draw();requestAnimationFrame(tick);
+</script></html>

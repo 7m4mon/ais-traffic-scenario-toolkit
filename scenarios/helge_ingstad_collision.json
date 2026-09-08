@@ -1,0 +1,337 @@
+{
+  "schema_version": "kinematic_reconstruction/1",
+  "name": "helge_ingstad_collision",
+  "reference_start": "2018-11-08T03:53:00+01:00",
+  "reference_end": "2018-11-08T04:01:15+01:00",
+  "duration_sec": 495,
+  "description": "Source-informed model, not AIS fixes. Use tools/build_helge_ingstad.py.",
+  "origin": {
+    "lat": 60.641666666666666,
+    "lon": 4.865
+  },
+  "source": {
+    "url": "https://www.aibn.no/Marine/Published-reports/2019-08-eng?attach=1&pid=SHT-Report-ReportFile",
+    "title": "AIBN Marine 2019/08, Part One, November 2019",
+    "pages": "17, 20, 22-28, 87-88, 153"
+  },
+  "assumptions": [
+    "Coordinates are derived by backward integration from assumed first-contact geometry at the published approximate accident location, not measured fixes.",
+    "Helge Ingstad COG is approximated by heading; small oscillations are omitted. Controls interpolate linearly in time.",
+    "Sola TS COG before 04:00:20 is assumed 345.8 degrees. That COG is explicitly reported only at 04:00:20. Earlier heading is 350 degrees.",
+    "Sola TS terminal heading 000 degrees, COG 355 degrees and speed 7.0 kn are assumptions, not achieved values inferred from helm/engine commands.",
+    "Both replay reference points are geometric ship centres, not actual GPS antenna positions.",
+    "Contact geometry is assumed: Sola starboard anchor at 120m forward/12m starboard; Helge starboard side at 20m aft/8.4m starboard.",
+    "Hull polygons are illustrative; no hydrodynamics, swept-volume collision detection, damage, flooding or post-impact trajectory.",
+    "Only the two involved ships are modelled; Tenax, Ajax, Dr. No, Silver Firda, Vestbris and Seigrunn are not reconstructed.",
+    "Synthetic MMSIs and Class B transport are for display; Helge is own NMEA, not a claim of historical AIS transmission."
+  ],
+  "vessels": [
+    {
+      "name": "HELGE INGSTAD",
+      "display_name": "HNoMS Helge Ingstad",
+      "role": "own",
+      "mmsi": 999181101,
+      "message_type": 18,
+      "ship_type": 35,
+      "length_m": 133.25,
+      "beam_m": 16.8,
+      "dimension_status": "Length: report p.153; beam is illustrative model value.",
+      "contact_forward_m": -20,
+      "contact_starboard_m": 8.4,
+      "controls": [
+        {
+          "time_sec": 0,
+          "local_time": "03:53:00",
+          "heading_deg": 158,
+          "cog_deg": 158,
+          "sog_kn": 16.9,
+          "status": "p.17 heading/speed; COG=heading proxy"
+        },
+        {
+          "time_sec": 386,
+          "local_time": "03:59:26",
+          "heading_deg": 157,
+          "cog_deg": 157,
+          "sog_kn": 17.0,
+          "status": "p.24 heading/speed; COG=heading proxy"
+        },
+        {
+          "time_sec": 390,
+          "local_time": "03:59:30",
+          "heading_deg": 157,
+          "cog_deg": 157,
+          "sog_kn": 17.0,
+          "status": "p.24 turn onset; retained heading/speed"
+        },
+        {
+          "time_sec": 420,
+          "local_time": "04:00:00",
+          "heading_deg": 155,
+          "cog_deg": 155,
+          "sog_kn": 16.9,
+          "status": "p.26 speed; heading interpolated model"
+        },
+        {
+          "time_sec": 446,
+          "local_time": "04:00:26",
+          "heading_deg": 152.5,
+          "cog_deg": 152.5,
+          "sog_kn": 16.9,
+          "status": "p.26 heading; speed held"
+        },
+        {
+          "time_sec": 456,
+          "local_time": "04:00:36",
+          "heading_deg": 149.7,
+          "cog_deg": 149.7,
+          "sog_kn": 16.9,
+          "status": "p.26 heading; speed held"
+        },
+        {
+          "time_sec": 466,
+          "local_time": "04:00:46",
+          "heading_deg": 147,
+          "cog_deg": 147,
+          "sog_kn": 16.9,
+          "status": "p.24 heading; speed held"
+        },
+        {
+          "time_sec": 486,
+          "local_time": "04:01:06",
+          "heading_deg": 147.2,
+          "cog_deg": 147.2,
+          "sog_kn": 16.9,
+          "status": "p.27 pre-final heading; exact time assumed"
+        },
+        {
+          "time_sec": 495,
+          "local_time": "04:01:15",
+          "heading_deg": 145.7,
+          "cog_deg": 145.7,
+          "sog_kn": 16.9,
+          "status": "p.27 terminal heading; exact timing and speed held model"
+        }
+      ]
+    },
+    {
+      "name": "SOLA TS",
+      "display_name": "Sola TS",
+      "role": "target",
+      "mmsi": 999181102,
+      "message_type": 18,
+      "ship_type": 80,
+      "length_m": 249.9,
+      "beam_m": 44,
+      "dimension_status": "Length: report p.153; beam is illustrative model value.",
+      "contact_forward_m": 120,
+      "contact_starboard_m": 12,
+      "controls": [
+        {
+          "time_sec": 0,
+          "local_time": "03:53:00",
+          "heading_deg": 350,
+          "cog_deg": 345.8,
+          "sog_kn": 3.7353846154,
+          "status": "Heading after p.20 order assumed steady; speed interpolated from 3.2kn at03:52 to6.1kn at03:57:25; COG assumed"
+        },
+        {
+          "time_sec": 265,
+          "local_time": "03:57:25",
+          "heading_deg": 350,
+          "cog_deg": 345.8,
+          "sog_kn": 6.1,
+          "status": "p.22 speed; heading held, COG assumed"
+        },
+        {
+          "time_sec": 360,
+          "local_time": "03:59:00",
+          "heading_deg": 350,
+          "cog_deg": 345.8,
+          "sog_kn": 6.7,
+          "status": "p.24 speed and set course; COG assumed"
+        },
+        {
+          "time_sec": 381,
+          "local_time": "03:59:21",
+          "heading_deg": 350,
+          "cog_deg": 345.8,
+          "sog_kn": 6.83125,
+          "status": "p.24 starboard course order; response begins model"
+        },
+        {
+          "time_sec": 440,
+          "local_time": "04:00:20",
+          "heading_deg": 355,
+          "cog_deg": 345.8,
+          "sog_kn": 7.2,
+          "status": "p.26 heading, COG and SOG"
+        },
+        {
+          "time_sec": 450,
+          "local_time": "04:00:30",
+          "heading_deg": 356,
+          "cog_deg": 347.5,
+          "sog_kn": 7.2,
+          "status": "p.27 SOG; heading/COG interpolated model; engine stop is an annotation"
+        },
+        {
+          "time_sec": 470,
+          "local_time": "04:00:50",
+          "heading_deg": 358,
+          "cog_deg": 351,
+          "sog_kn": 7.1,
+          "status": "p.27 full astern order; achieved heading/COG/speed assumed"
+        },
+        {
+          "time_sec": 495,
+          "local_time": "04:01:15",
+          "heading_deg": 0,
+          "cog_deg": 355,
+          "sog_kn": 7.0,
+          "status": "Terminal heading/COG/SOG assumed, not recorded"
+        }
+      ]
+    }
+  ],
+  "range_checks": [
+    {
+      "time_sec": 267,
+      "local_time": "03:57:27",
+      "bow_range_m": 2720,
+      "source": "figure 13",
+      "note": "Figure timestamp adopted; nearby prose timestamps sometimes differ by 2-5s."
+    },
+    {
+      "time_sec": 367,
+      "local_time": "03:59:07",
+      "bow_range_m": 1510,
+      "source": "figure 15",
+      "note": "Figure timestamp adopted; nearby prose timestamps sometimes differ by 2-5s."
+    },
+    {
+      "time_sec": 417,
+      "local_time": "03:59:57",
+      "bow_range_m": 875,
+      "source": "figure 16",
+      "note": "Figure timestamp adopted; nearby prose timestamps sometimes differ by 2-5s."
+    },
+    {
+      "time_sec": 447,
+      "local_time": "04:00:27",
+      "bow_range_m": 500,
+      "source": "figure 17",
+      "note": "Figure timestamp adopted; nearby prose timestamps sometimes differ by 2-5s."
+    },
+    {
+      "time_sec": 467,
+      "local_time": "04:00:47",
+      "bow_range_m": 250,
+      "source": "figure 18",
+      "note": "Figure timestamp adopted; nearby prose timestamps sometimes differ by 2-5s."
+    }
+  ],
+  "annotations": [
+    {
+      "time_sec": 0,
+      "local_time": "03:53:00",
+      "label": "再生開始：Helge南下、Sola出港後の増速",
+      "source": "p.17 / model"
+    },
+    {
+      "time_sec": 267,
+      "local_time": "03:57:27",
+      "label": "報告書：船首間距離 約2,720m",
+      "source": "figure 13"
+    },
+    {
+      "time_sec": 303,
+      "local_time": "03:58:03",
+      "label": "SolaがVTSに接近船の識別を問い合わせ",
+      "source": "p.22"
+    },
+    {
+      "time_sec": 354,
+      "local_time": "03:58:54",
+      "label": "VTSがAISのないレーダー目標を追跡",
+      "source": "p.23"
+    },
+    {
+      "time_sec": 362,
+      "local_time": "03:59:02",
+      "label": "Solaが信号灯で注意喚起",
+      "source": "p.23"
+    },
+    {
+      "time_sec": 381,
+      "local_time": "03:59:21",
+      "label": "Sola：000°への変針指令",
+      "source": "p.24"
+    },
+    {
+      "time_sec": 390,
+      "local_time": "03:59:30",
+      "label": "Helge：左への変針開始",
+      "source": "p.24"
+    },
+    {
+      "time_sec": 407,
+      "local_time": "03:59:47",
+      "label": "VTS：接近船はHelge Ingstadの可能性と伝達",
+      "source": "p.25"
+    },
+    {
+      "time_sec": 416,
+      "local_time": "03:59:56",
+      "label": "SolaがHelgeを船名で呼び出す",
+      "source": "p.25"
+    },
+    {
+      "time_sec": 428,
+      "local_time": "04:00:08",
+      "label": "Sola：直ちに右転するよう要求",
+      "source": "p.25"
+    },
+    {
+      "time_sec": 431,
+      "local_time": "04:00:11",
+      "label": "Helge：照明のある物体へ近づくと考え右転を拒む",
+      "source": "pp.25-26"
+    },
+    {
+      "time_sec": 447,
+      "local_time": "04:00:27",
+      "label": "Helge：右舷のプラットフォーム通過後に右転すると応答",
+      "source": "p.26"
+    },
+    {
+      "time_sec": 450,
+      "local_time": "04:00:30",
+      "label": "Sola：機関停止の指令（船は直ちには停止しない）",
+      "source": "p.27"
+    },
+    {
+      "time_sec": 464,
+      "local_time": "04:00:44",
+      "label": "VTS：接近への対処を要求",
+      "source": "p.27"
+    },
+    {
+      "time_sec": 470,
+      "local_time": "04:00:50",
+      "label": "Sola：全速後進の指令",
+      "source": "p.27"
+    },
+    {
+      "time_sec": 483,
+      "local_time": "04:01:03",
+      "label": "VTS：衝突するとの警告",
+      "source": "p.27"
+    },
+    {
+      "time_sec": 495,
+      "local_time": "04:01:15",
+      "label": "衝突時刻・再生終了。接触位置はモデルの仮定",
+      "source": "p.28 / model"
+    }
+  ]
+}
