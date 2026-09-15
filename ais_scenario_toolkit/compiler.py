@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 from .cpa import calc_cpa_tcpa, classify_cpa_tcpa, velocity_components_nm_s
+from .ais_encode import encode_safety_message_bits
 from .geo import local_xy_to_lat_lon
 from .model import Scenario, Thresholds, TimelineRecord, Vessel, VesselState
 
@@ -90,7 +92,20 @@ def compile_scenario(scenario: Scenario) -> list[TimelineRecord]:
                     aton_off_position=target.aton_off_position,
                 )
             )
-    return records
+    for message in scenario.messages:
+        if not math.isfinite(message.time_sec) or not 0 <= message.time_sec <= scenario.duration_sec:
+            raise ValueError("Message time_sec must be within the scenario duration")
+        encode_safety_message_bits(
+            message_type=message.message_type, mmsi=message.mmsi, text=message.text,
+            destination_mmsi=message.destination_mmsi, sequence_number=message.sequence_number,
+        )
+        records.append(TimelineRecord(
+            time_sec=message.time_sec, role="message", mmsi=message.mmsi, name=None,
+            x_nm=None, y_nm=None, lat=None, lon=None, sog_kn=None, cog_deg=None, heading_deg=None,
+            message_type=message.message_type, safety_text=message.text.upper(),
+            destination_mmsi=message.destination_mmsi, sequence_number=message.sequence_number,
+        ))
+    return sorted(records, key=lambda record: record.time_sec)
 
 
 def state_at(vessel: Vessel, time_sec: float) -> VesselState:

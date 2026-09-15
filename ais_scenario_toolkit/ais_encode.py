@@ -199,6 +199,55 @@ def encode_position_bits(message_type: int, **kwargs) -> str:
     raise ValueError(f"Unsupported synthetic AIS position message type: {message_type}")
 
 
+def encode_safety_message_bits(
+    *, message_type: int, mmsi: int, text: str,
+    destination_mmsi: int | None = None, sequence_number: int = 0,
+) -> str:
+    """Encode ITU-R M.1371 safety text (12 addressed, 14 broadcast)."""
+    if message_type not in (12, 14):
+        raise ValueError("Safety message_type must be 12 or 14")
+    if not 1 <= mmsi <= 999999999:
+        raise ValueError("Source MMSI must be 1..999999999")
+    # Reject unsupported characters rather than silently corrupting safety text.
+    if not isinstance(text, str) or not text.isascii():
+        raise ValueError("Safety text must use AIS ASCII characters")
+    text = text.upper()
+    limit = 156 if message_type == 12 else 161
+    if not text.strip() or len(text) > limit or any(ch not in AIS_TEXT for ch in text):
+        raise ValueError(f"Safety text must contain 1..{limit} AIS ASCII characters")
+    header = uint_bits(message_type, 6) + uint_bits(0, 2) + uint_bits(mmsi, 30)
+    if message_type == 12:
+        if destination_mmsi is None or not 1 <= destination_mmsi <= 999999999:
+            raise ValueError("Message 12 requires destination_mmsi in 1..999999999")
+        header += uint_bits(sequence_number, 2) + uint_bits(destination_mmsi, 30) + "00"
+    else:
+        if destination_mmsi is not None or sequence_number != 0:
+            raise ValueError("Message 14 has no destination or sequence number")
+        header += "00"
+    bits = header + ais_text_bits(text, len(text))
+    # ITU-R M.1371 Annex 2, message structure: unused bits in the final
+    # octet are zero. This is separate from NMEA's six-bit armoring fill.
+    return bits + "0" * ((-len(bits)) % 8)
+
+
+def payload_bits_to_aivdm_sentences(bits: str, channel: str = "A") -> list[str]:
+    """Fragment long payloads; each sentence stays within the NMEA length limit.
+
+    Fragments must be sent consecutively (the player does this); sequence ID 0
+    may therefore be reused for each complete multipart message.
+    """
+    fill = (-len(bits)) % 6
+    padded = bits + "0" * fill
+    payload = "".join(sixbit_to_payload_char(int(padded[i:i + 6], 2)) for i in range(0, len(padded), 6))
+    chunks = [payload[i:i + 60] for i in range(0, len(payload), 60)]
+    total = len(chunks)
+    sequence = "0" if total > 1 else ""
+    return [
+        nmea_sentence(f"AIVDM,{total},{i},{sequence},{channel},{chunk},{fill if i == total else 0}", prefix="!")
+        for i, chunk in enumerate(chunks, 1)
+    ]
+
+
 def payload_bits_to_aivdm(bits: str, channel: str = "A", talker: str = "AIVDM") -> str:
     fill_bits = (6 - (len(bits) % 6)) % 6
     padded = bits + ("0" * fill_bits)

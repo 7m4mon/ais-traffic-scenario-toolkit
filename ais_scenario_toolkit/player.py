@@ -6,6 +6,8 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 from .ais_encode import (
+    encode_safety_message_bits,
+    payload_bits_to_aivdm_sentences,
     encode_message_21_bits,
     encode_message_24a_bits,
     encode_message_24b_bits,
@@ -44,6 +46,13 @@ def records_to_output(
         except ValueError:
             pass
         return nmea_messages, bitstrings
+    if record.message_type in (12, 14):
+        bits = encode_safety_message_bits(
+            message_type=record.message_type, mmsi=record.mmsi or 0,
+            text=record.safety_text or "", destination_mmsi=record.destination_mmsi,
+            sequence_number=record.sequence_number,
+        )
+        return payload_bits_to_aivdm_sentences(bits), [bits]
     if record.lat is None or record.lon is None or record.mmsi is None:
         return [], []
     if record.message_type == 21:

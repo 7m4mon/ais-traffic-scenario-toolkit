@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.2",
+  "name": "safety_messages_demo",
+  "description": "Synthetic AIS safety text reception demo; all text is a test.",
+  "origin": {"lat": -38.05, "lon": 144.85},
+  "duration_sec": 60,
+  "time_step_sec": 1,
+  "own_ship": {
+    "mmsi": 999510000, "name": "OWN SHIP",
+    "initial": {"x_nm": 0, "y_nm": 0, "heading_deg": 0, "speed_kn": 9}
+  },
+  "targets": [{
+    "mmsi": 999510101, "name": "TEST VESSEL", "message_type": 1,
+    "initial": {"x_nm": 0.7, "y_nm": 0.525, "heading_deg": 270, "speed_kn": 12}
+  }],
+  "messages": [
+    {"time_sec": 10, "message_type": 14, "mmsi": 999510101, "text": "TEST - CAUTION CROSSING TRAFFIC"},
+    {"time_sec": 30, "message_type": 12, "mmsi": 999510101, "destination_mmsi": 999510000, "text": "TEST - KEEP CLEAR OF MY VESSEL"},
+    {"time_sec": 50, "message_type": 14, "mmsi": 999510101, "text": "TEST COMPLETE"}
+  ]
+}

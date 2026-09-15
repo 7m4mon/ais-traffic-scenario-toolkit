@@ -103,6 +103,25 @@ class Thresholds:
 
 
 @dataclass(frozen=True)
+class SafetyMessage:
+    time_sec: float
+    mmsi: int
+    text: str
+    message_type: int = 14
+    destination_mmsi: int | None = None
+    sequence_number: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "SafetyMessage":
+        return cls(
+            time_sec=float(data["time_sec"]), mmsi=int(data["mmsi"]),
+            text=data["text"], message_type=int(data.get("message_type", 14)),
+            destination_mmsi=int(data["destination_mmsi"]) if data.get("destination_mmsi") is not None else None,
+            sequence_number=int(data.get("sequence_number", 0)),
+        )
+
+
+@dataclass(frozen=True)
 class Scenario:
     schema_version: str
     name: str
@@ -113,6 +132,7 @@ class Scenario:
     thresholds: Thresholds
     own_ship: Vessel
     targets: list[Vessel]
+    messages: list[SafetyMessage] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Scenario":
@@ -126,6 +146,7 @@ class Scenario:
             thresholds=Thresholds.from_dict(data.get("thresholds")),
             own_ship=Vessel.from_dict(data["own_ship"], is_own=True),
             targets=[Vessel.from_dict(item) for item in data.get("targets", [])],
+            messages=[SafetyMessage.from_dict(item) for item in data.get("messages", [])],
         )
 
 
@@ -167,6 +188,10 @@ class TimelineRecord:
     aton_virtual: bool = False
     aton_off_position: bool = False
 
+    safety_text: str | None = None
+    destination_mmsi: int | None = None
+    sequence_number: int = 0
+
     def to_dict(self) -> dict[str, Any]:
         result = self.__dict__.copy()
         ts = result.get("timestamp_utc")
@@ -184,6 +209,9 @@ class TimelineRecord:
 
 
 CSV_FIELDS = [
+    "safety_text",
+    "destination_mmsi",
+    "sequence_number",
     "time_sec",
     "timestamp_utc",
     "role",

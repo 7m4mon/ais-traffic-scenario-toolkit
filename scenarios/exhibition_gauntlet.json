@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2",
   "name": "exhibition_gauntlet",
-  "description": "Ten-minute plotter exhibition: crossing risk, fast overtaker, head-on approach, virtual isolated danger, AIS-SART, a manoeuvring tug, and a late port-side crossing.",
+  "description": "Ten-minute plotter exhibition: crossing risk, fast overtaker, head-on approach, virtual isolated danger, AIS-SART, a manoeuvring tug, a late port-side crossing, and timed AIS safety text messages.",
   "origin": {
     "lat": -38.0500,
     "lon": 144.8500
@@ -29,6 +29,33 @@
       { "time_sec": 500, "heading_deg": 20.0 }
     ]
   },
+  "messages": [
+    {
+      "time_sec": 30,
+      "message_type": 14,
+      "mmsi": 999510201,
+      "text": "TEST - CAUTION CROSSING TRAFFIC"
+    },
+    {
+      "time_sec": 240,
+      "message_type": 12,
+      "mmsi": 999510204,
+      "destination_mmsi": 999510000,
+      "text": "TEST - HEAD ON APPROACH. KEEP CLEAR."
+    },
+    {
+      "time_sec": 305,
+      "message_type": 14,
+      "mmsi": 999510204,
+      "text": "TEST - CAUTION VIRTUAL WRECK AHEAD"
+    },
+    {
+      "time_sec": 415,
+      "message_type": 14,
+      "mmsi": 970990001,
+      "text": "SART TEST"
+    }
+  ],
   "targets": [
     {
       "mmsi": 999510201,

@@ -47,9 +47,67 @@ python tools/ais_scenario_compile.py \
   --csv timeline/exhibition_gauntlet.csv
 ```
 
-The toolkit also includes a scenario inspired by the famous Battle of Tsushima, featuring the Japanese fleet's "Togo Turn." See [the scenario documentation](docs/tsushima_togo_turn.md) for details.
+## Historical Scenario: Tsushima / Togo Turn
 
-Two collision scenarios are also included: USS Fitzgerald / ACX Crystal and HNoMS Helge Ingstad / Sola TS, based on published accident reports. See the [Fitzgerald documentation](docs/fitzgerald_collision.md) and [Helge Ingstad documentation](docs/helge_ingstad_collision.md) for details and replay instructions.
+A source-noted conceptual reconstruction of 27 May 1905, 14:00–14:20 on a
+Japanese-side reference clock, with Mikasa as own ship and 23 AIS targets.
+Sequential port turns use delayed, finely sampled heading events. Positions,
+spacing and Russian formation movements are approximations, not surveyed tracks.
+See [historical sources, assumptions and Japanese instructions](docs/tsushima_togo_turn.md).
+
+```powershell
+python .\tools\build_tsushima.py
+python .\tools\ais_scenario_player.py --timeline .\timeline\tsushima_togo_turn.jsonl --nmea-tcp-server 127.0.0.1:10110 --replay-speed 5
+```
+
+The builder regenerates the scenario JSON, timeline JSONL/CSV and event CSV.
+For hand-edited scenario JSON, use the normal compiler instead of rebuilding.
+
+## Accident Replay: Fitzgerald / ACX Crystal
+
+Replay June 17, 2017, 01:15:12–01:30:34 JST from published JTSB AIS/ARPA
+position tables, with Fitzgerald as own ship and three merchant targets.
+Recorded reference positions are preserved; they do not converge to a common
+point at impact. The final seven seconds of the two involved ships are extrapolated.
+See [sources, limitations and Japanese instructions](docs/fitzgerald_collision.md).
+
+```powershell
+python .\tools\build_fitzgerald.py
+python .\tools\ais_scenario_player.py --timeline .\timeline\fitzgerald_collision.jsonl --nmea-tcp-server 127.0.0.1:10110 --replay-speed 5
+```
+
+Open `timeline/fitzgerald_collision_preview.html` for a standalone interactive
+track preview. This scenario's `observed_tracks/1` input requires the dedicated
+builder above, rather than the synthetic motion-event compiler.
+
+## Accident Reconstruction: Helge Ingstad / Sola TS
+
+An 8-minute-15-second, two-ship reconstruction of November 8, 2018,
+03:53:00–04:01:15 CET, with Helge Ingstad as own ship. This is a source-informed
+kinematic model, not recorded AIS. Heading/speed controls, assumed contact geometry,
+radio-event annotations and comparisons against five published bow-to-bow ranges
+are documented in [Japanese instructions and limitations](docs/helge_ingstad_collision.md).
+
+```powershell
+python .\tools\build_helge_ingstad.py
+python .\tools\ais_scenario_player.py --timeline .\timeline\helge_ingstad_collision.jsonl --nmea-tcp-server 127.0.0.1:10110 --replay-speed 5
+```
+
+Open `timeline/helge_ingstad_collision_preview.html` for playback and a close-up
+view of the assumed contact geometry. Use the dedicated builder, not the synthetic
+motion-event compiler, for this `kinematic_reconstruction/1` scenario.
+
+## Scheduled AIS Safety Text
+
+Synthetic scenarios accept a top-level `messages` array for timed AIS Message 12
+(addressed) and Message 14 (broadcast) text. See the [Japanese instructions](docs/safety_messages.md)
+and `scenarios/safety_messages_demo.json`. Long text is fragmented into AIVDM
+sentences; receiver popup/sound behavior depends on the connected device.
+
+```powershell
+python tools/ais_scenario_compile.py --scenario scenarios/safety_messages_demo.json --output timeline/safety_messages_demo.jsonl
+python tools/ais_scenario_player.py --timeline timeline/safety_messages_demo.jsonl --nmea-tcp-server 127.0.0.1:10110 --echo-output
+```
 
 ## Import AIS-Catcher Logs
 
@@ -92,6 +150,16 @@ python tools/ais_scenario_player.py timeline/crossing_starboard.jsonl --dry-run 
 ```
 
 ## Replay To A DUT And Mictronics
+
+Add `--loop` to repeat a demonstration until **Ctrl+C**. Serial/network outputs
+stay open across passes and close on stop. Each pass repeats all scheduled
+messages and vessel motion, with one simulated second between passes (scaled
+by `--replay-speed`). Synthetic GPS timestamps start from the current UTC time
+on each pass; explicit recorded timestamps are replayed unchanged.
+
+```powershell
+python tools/ais_scenario_player.py --timeline .\timeline\exhibition_gauntlet.jsonl --own-nmea-serial COM11 --own-baud 38400 --target-aivdm-serial COM12 --target-baud 115200 --echo-output --loop
+```
 
 ```bash
 python tools/ais_scenario_player.py \
@@ -142,8 +210,7 @@ python tools/aivdm_to_bits.py --ignore-checksum '!AIVDM,1,1,,A,1>pf?UQP01:Gdtsb?
 https://nomulabo.com/ais-traffic-scenario-toolkit/
 ```
 
-<img width="867" height="714" alt="crossing" src="https://github.com/user-attachments/assets/0ed44d61-2605-43f9-b69f-e10197b1f2f0" />  
-<img width="867" height="714" alt="head_on" src="https://github.com/user-attachments/assets/afe11d3f-f91d-4d8d-903d-9b4538de8be4" />  
-<img width="867" height="714" alt="overtaking" src="https://github.com/user-attachments/assets/2e1525ee-128d-4bf5-b736-c22c53c27d4f" />  
-<img width="867" height="714" alt="exhibition" src="https://github.com/user-attachments/assets/8d30fb26-ae89-49a5-aa2b-496de63906e1" />  
-<img width="886" height="819" alt="togo_turn" src="https://github.com/user-attachments/assets/35fa6a10-357b-4a46-9d15-2eb5a82a5b25" />  
+<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/2e1525ee-128d-4bf5-b736-c22c53c27d4f" />  
+<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/afe11d3f-f91d-4d8d-903d-9b4538de8be4" />  
+<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/0ed44d61-2605-43f9-b69f-e10197b1f2f0" />  
+<img width="867" height="714" alt="Image" src="https://github.com/user-attachments/assets/8d30fb26-ae89-49a5-aa2b-496de63906e1" />  
