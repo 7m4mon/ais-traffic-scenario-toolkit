@@ -191,6 +191,38 @@ For the Windows exhibition setup, send own-ship GPS to `COM101` and target AIS t
 python .\tools\ais_scenario_player.py --timeline .\timeline\exhibition_gauntlet.jsonl --own-nmea-serial COM101 --own-baud 4800 --target-aivdm-serial COM14 --target-baud 115200 --echo-output
 ```
 
+## Export A Standalone SD Demo
+
+Export synchronized target AIS and own-ship NMEA for the Bluepill SD-demo firmware. Copy the generated file to
+the root of a FAT16/FAT32 card as `demo.bin`; replace cards with power OFF.
+See [SD demo instructions and format](docs/sd_demo.md) for wiring and limitations.
+
+```powershell
+python .\tools\ais_scenario_sd_export.py --timeline .\timeline\exhibition_gauntlet.jsonl --output .\sd_card\demo.bin --name "EXHIBITION DEMO"
+```
+
+Own-ship RMC/GGA/HDT and target AIS share the same replay clock. The transmitter's
+own-ship UART output is **38400 baud, 8N1**; its separate debug UART remains at
+115200 baud. The SD file stores messages and timing, so changing the UART baud
+does not require regenerating the card.
+
+### 2026-11-03 開発・動作確認
+
+- Bluepill単体でSDの `demo.bin` を起動時に検証し、正常ならループ再生する構成を追加。
+  カード・ファイルが使用できない場合は従来のUSB入力モードへ移行します。
+- `AISDEMO2` に自船RMC/GGA/HDTと他船AISを保存し、共通の再生時計で出力。
+  自船出力はPB10からRS-422変換回路を介してプロッタの差動NMEA入力へ接続し、38400bpsに設定しました。
+- 変換ツール、形式・配線の説明、展示用サンプル `sd_card/demo.bin` を追加。
+  サンプルはAIS 2,154件＋自船NMEA 1,803件、169,936バイト、601秒周期です。
+- 実機のFlash容量はSTM32F103C8相当の64KB。8KBブートローダ使用時のアプリ上限は57,344バイトです。
+  旧60,260バイト版の容量超過と既存ブートローダの破損を確認し、ST-Linkでバックアップ・復旧しました。
+  周波数計算の整数化と診断表示の短縮により、56,836バイトへ軽量化。グローバルRAMは9,080バイトです。
+- USBシリアルの復旧、実機でのSD再生モード移行とシリアル出力を確認。
+  カードは読み取り専用で使用し、交換は電源OFFで行います。
+
+詳細は [SD単体デモの手順](docs/sd_demo.md) と
+[送信器側のREADME](https://github.com/7m4mon/bluepill-adf7021-ais-interface) を参照してください。
+
 ## AIVDM To Bit String
 
 ```bash
